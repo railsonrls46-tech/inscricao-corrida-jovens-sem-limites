@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Status do pagamento</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container small">
+        <h1>Status da inscrição</h1>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash">
+                    {% for msg in messages %}
+                        <p>{{ msg }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form method="post" action="{{ url_for('status') }}">
+            <label>
+                Nome, telefone ou WhatsApp:
+                <input type="text" name="termo" value="{{ termo }}" placeholder="Digite seu nome ou telefone">
+            </label>
+            <button type="submit" class="btn primary">Consultar</button>
+        </form>
+
+        {% if resultado %}
+            {% for item in resultado %}
+                <div class="status-card">
+                    <h3>{{ item["nome"] }}</h3>
+                    <p>Telefone: {{ item["telefone"] }}</p>
+                    <p>Status:
+                        {% if item["status"] == "aprovado" %}
+                            <span class="badge success">Pagamento concluído</span>
+                        {% else %}
+                            <span class="badge warning">Pagamento pendente</span>
+                        {% endif %}
+                    </p>
+                </div>
+            {% endfor %}
+        {% elif termo %}
+            <p>Nenhuma inscrição encontrada.</p>
+        {% endif %}
+
+        <div class="back-link">
+            <a href="{{ url_for('index') }}">Voltar para a página inicial</a>
+        </div>
+    </div>
+</body>
+</html>

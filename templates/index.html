@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JOVENS SEM LIMITES</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header class="hero">
+            <h1>JOVENS SEM LIMITES</h1>
+            <p>Inscrição para corrida</p>
+        </header>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash">
+                    {% for msg in messages %}
+                        <p>{{ msg }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <section class="info-pix">
+            <h2>Período de inscrição</h2>
+            <p>Data de início: 02</p>
+            <p>Data de encerramento: 07</p>
+
+            {% if periodo_aberto %}
+                <div class="status-open">Inscrições abertas</div>
+            {% else %}
+                <div class="status-closed">Inscrições encerradas</div>
+            {% endif %}
+        </section>
+
+        <section class="pix-card">
+            <h2>Pagamento via PIX</h2>
+            <p><strong>Chave PIX:</strong> {{ pix_number }}</p>
+            <p><strong>Nome do PIX:</strong> {{ pix_name }}</p>
+        </section>
+
+        <section class="form-section">
+            <h2>Ficha de inscrição</h2>
+
+            {% if periodo_aberto %}
+                <form action="{{ url_for('inscrever') }}" method="post" enctype="multipart/form-data">
+                    <div class="grid">
+                        <label>
+                            Nome completo:
+                            <input type="text" name="nome" required>
+                        </label>
+
+                        <label>
+                            Data de nascimento:
+                            <input type="date" name="data_nascimento" required>
+                        </label>
+
+                        <label>
+                            Sexo:
+                            <select name="sexo" required>
+                                <option value="">Selecione</option>
+                                <option value="Masculino">Masculino</option>
+                                <option value="Feminino">Feminino</option>
+                            </select>
+                        </label>
+
+                        <label>
+                            Categoria:
+                            <select name="categoria" required>
+                                <option value="">Selecione</option>
+                                <option value="Aluno">Aluno</option>
+                                <option value="Funcionário">Funcionário</option>
+                            </select>
+                        </label>
+
+                        <label>
+                            Número de telefone:
+                            <input type="tel" name="telefone" required>
+                        </label>
+
+                        <label>
+                            Número de WhatsApp:
+                            <input type="tel" name="whatsapp" value="{{ whatsapp_number }}" required>
+                        </label>
+                    </div>
+
+                    <div class="upload-box">
+                        <label for="comprovante">Comprovante do PIX:</label>
+                        <input type="file" id="comprovante" name="comprovante" accept=".jpg,.jpeg,.png,.pdf" required>
+                    </div>
+
+                    <div class="button-row">
+                        <button type="submit" class="btn primary">Enviar inscrição</button>
+                        <a class="btn whatsapp" href="https://wa.me/5599984336831?text={{ 'Olá, quero enviar o comprovante do PIX da inscrição da corrida JOVENS SEM LIMITES.' | urlencode }}" target="_blank">
+                            Enviar comprovante no WhatsApp
+                        </a>
+                    </div>
+                </form>
+            {% else %}
+                <p>O período de inscrição está encerrado.</p>
+            {% endif %}
+        </section>
+
+        <div class="status-link">
+            <a href="{{ url_for('status') }}">Consultar status do pagamento</a>
+        </div>
+
+        <div class="admin-link">
+            <a href="{{ url_for('admin_login_page') }}">Área do administrador</a>
+        </div>
+    </div>
+</body>
+</html>
